@@ -3,6 +3,9 @@ import nodemailer from 'nodemailer';
 
 export const sendMail = async ({email, emailType , userId}:{email:string, emailType:string , userId:string} ) => {
     try {
+
+      if(emailType === 'VERIFY') {}
+
         const transporter = nodemailer.createTransport({
           host: process.env.SMTP_HOST,
           port: 465,
