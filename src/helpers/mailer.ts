@@ -1,31 +1,56 @@
-import { Html } from 'next/document';
+import User from '@/models/userModel';
+import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 
 export const sendMail = async ({email, emailType , userId}:{email:string, emailType:string , userId:string} ) => {
-    try {
+    try  {
+      const hashedToken = await bcrypt.hash(userId.toString(),10)
 
-      if(emailType === 'VERIFY') {}
-
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST,
-          port: 465,
-          secure: true,
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASSWORD,
+      if(emailType === 'VERIFY') {
+        await User.findByIdAndUpdate(
+          userId,
+          {
+            verificationToken : hashedToken,
+            verificationTokenExpire : Date.now() + 3600000
           },
-        });
+        )
+      }
+      else if(emailType === 'RESET') {
+        await User.findByIdAndUpdate(
+          userId,
+          {
+            resetPasswordToken : hashedToken,
+            resetPasswordTokenExpire : Date.now() + 3600000
+          },
+        )
+      }
+
+      var transport = nodemailer.createTransport({
+        host: "sandbox.smtp.mailtrap.io",
+        port: 2525,
+        auth: {
+          user: "97b042e8354ab9",
+          pass: "9701758e60aa34"
+        }
+      });
       
         const mailOptions = {
           from: process.env.SMTP_FROM,
           to: email,
           subject: emailType === 'VERIFY' ? 'Verify your email' : 'Reset your password',
-          // text : emailType === 'VERIFY' ? `Click on the link to verify your email: http://localhost:3000/verify/${userId}` : `Click on the link to reset your password: http://localhost:3000/reset-password/${userId}`,
-          // text : emailType === 'VERIFY' ? `Click on the link to verify your email: ${process.env.CLIENT_URL}/verify/${userId}` : `Click on the link to reset your password: ${process.env.CLIENT_URL}/reset-password/${userId}`,
-          html : "<h1>Test</h1>"
+          html : emailType === "VERIFY" ? `<p>Click<a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">here</a>
+          to ${emailType === 'VERIFY' ? 'verify your email' : 'reset your password'}
+          or copy and paste the link below in your browser
+          <br> ${process.env.DOMAIN}/verifyemail?token=${hashedToken}
+          </p>` : 
+          `<p>Click<a href="${process.env.DOMAIN}/resetpassword?token=${hashedToken}">here</a>
+          to ${emailType === 'VERIFY' ? 'verify your email' : 'reset your password'}
+          or copy and paste the link below in your browser
+          <br> ${process.env.DOMAIN}/resetpassword?token=${hashedToken}
+          </p>`
         };
       
-        return await transporter.sendMail(mailOptions);
+        return await transport.sendMail(mailOptions);
       
       }
        catch (error: any) {
