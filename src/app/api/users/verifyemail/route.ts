@@ -10,12 +10,14 @@ export async function POST(request: NextRequest) {
         const { token } = reqBody;
         console.log(token)
 
-        const user = await User.findOneAndUpdate(
-            {
-            verificationToken : token ,
-            verificationTokenExpire : { $gt : Date.now() }
-            }
-        )
+        // const user = await User.findOneAndUpdate(
+        //     {
+        //     verificationToken : token ,
+        //     verificationTokenExpire : { $gt : new Date() }
+        //     }
+        // )
+
+        const user = await User.findOne({verificationToken: token, verificationTokenExpire: {$gt: Date.now()}});
 
         if (!user) {
             return NextResponse.json({ message: "Invalid or expired token" }, { status: 400 });

@@ -8,20 +8,23 @@ export const sendMail = async ({email, emailType , userId}:{email:string, emailT
 
       if(emailType === 'VERIFY') {
         await User.findByIdAndUpdate(
-          userId,
-          {
+          userId,{
+          $set:{
             verificationToken : hashedToken,
             verificationTokenExpire : Date.now() + 3600000
           },
+        }
         )
       }
       else if(emailType === 'RESET') {
         await User.findByIdAndUpdate(
-          userId,
-          {
+          userId,{
+            $set:{
             resetPasswordToken : hashedToken,
             resetPasswordTokenExpire : Date.now() + 3600000
           },
+            
+          }
         )
       }
 
