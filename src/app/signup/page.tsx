@@ -16,7 +16,6 @@ import { useState , useEffect} from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
-import { set } from 'mongoose';
   
   const Register = () => {
     const Router = useRouter();
@@ -28,7 +27,7 @@ import { set } from 'mongoose';
         password: "",
     })
     useEffect(() => {
-      if(user.username.length > 0 || user.email.length > 0 || user.password.length > 0) {
+      if(user.username.length > 0 && user.email.length > 0 && user.password.length > 0) {
         
         setButtonDisabled(false);
 
