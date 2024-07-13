@@ -51,9 +51,8 @@ const Verifyemail = () => {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  },[]);
   
-
   useEffect(() => {
     const doAsync = async () => {
       if (token.length > 0) {
@@ -101,7 +100,7 @@ const Verifyemail = () => {
             </Button>
             <Grid container justifyContent={"flex-end"}>
               <Grid item>
-                <Link href="/signup">Don't have an account? Register</Link>
+                <Link href="/signup">Don&apos;t have an account? Register</Link>
               </Grid>
             </Grid>
           </Box>

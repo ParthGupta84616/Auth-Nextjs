@@ -74,6 +74,10 @@ import { useRouter } from 'next/navigation';
             </Avatar>
             <Typography variant="h5">Signup</Typography>
             <Box sx={{ mt: 3 }}>
+            <form onSubmit={(event) => {
+              event.preventDefault(); // Prevent the default form submit action
+              handleRegister(); // Call the handleRegister function
+            }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -114,6 +118,7 @@ import { useRouter } from 'next/navigation';
               </Grid>
               <Button
                 fullWidth
+                type='submit'
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 onClick={handleRegister}
@@ -122,6 +127,7 @@ import { useRouter } from 'next/navigation';
                 >
                 {loading ? 'Signing up...' : 'Signup'} 
                 </Button>
+                </form>
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <Link href="/login">Already have an account? Login</Link>

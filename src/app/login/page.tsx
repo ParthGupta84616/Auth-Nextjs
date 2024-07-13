@@ -74,6 +74,10 @@ const Login = () => {
           </Avatar>
           <Typography variant="h5">Login</Typography>
           <Box sx={{ mt: 1 }}>
+          <form onSubmit={(event) => {
+  event.preventDefault(); // Prevent the default form submit action
+  handleLogin(); 
+}}>
             <TextField
               margin="normal"
               required
@@ -99,6 +103,7 @@ const Login = () => {
             />
 
               <Button
+              type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
@@ -108,9 +113,10 @@ const Login = () => {
                 >
                 {loading ? 'Loging up...' : 'Login'} 
                 </Button>
+            </form>
             <Grid container justifyContent={"flex-end"}>
               <Grid item>
-                <Link href="/signup">Don't have an account? Register</Link>
+                <Link href="/signup">Don&apos;t have an account? Register</Link>
               </Grid>
             </Grid>
           </Box>
